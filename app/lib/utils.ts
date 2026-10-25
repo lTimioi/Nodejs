@@ -21,6 +21,7 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
+// 从收入数据中提取y轴标签和最大值
 export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis
   // based on highest record and in 1000s

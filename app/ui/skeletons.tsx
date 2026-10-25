@@ -1,4 +1,6 @@
 // Loading animation
+// 用于在数据加载时显示的骨架屏
+// https://www.tremor.so/
 const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
@@ -59,6 +61,7 @@ export function InvoiceSkeleton() {
   );
 }
 
+// 渲染最新发票列表骨架屏 
 export function LatestInvoicesSkeleton() {
   return (
     <div
@@ -82,6 +85,7 @@ export function LatestInvoicesSkeleton() {
   );
 }
 
+// 渲染仪表板骨架屏
 export default function DashboardSkeleton() {
   return (
     <>

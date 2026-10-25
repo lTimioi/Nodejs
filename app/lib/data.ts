@@ -8,20 +8,23 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+//  ssl 证书
+// const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+const sql = postgres(process.env.POSTGRES_URL!);
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+//  获取收入和月份数据 
 export async function fetchRevenue() {
   try {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
-
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+//模拟慢速度数据获取 
+    console.log('Fetching revenue data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue[]>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    console.log('Data fetch completed after 3 seconds.');
 
     return data;
   } catch (error) {
@@ -30,6 +33,8 @@ export async function fetchRevenue() {
   }
 }
 
+
+// 从数据库中获取最新的5条发票
 export async function fetchLatestInvoices() {
   try {
     const data = await sql<LatestInvoiceRaw[]>`
@@ -50,12 +55,16 @@ export async function fetchLatestInvoices() {
   }
 }
 
+
 export async function fetchCardData() {
   try {
+    // 
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
+    // 从数据库中获取发票的总数
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
+    // 从数据库中获取客户的总数
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
     const invoiceStatusPromise = sql`SELECT
          SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
@@ -68,6 +77,10 @@ export async function fetchCardData() {
       invoiceStatusPromise,
     ]);
 
+    // 从数据库中获取发票的总数
+    // 从数据库中获取客户的总数
+    // 从数据库中获取已支付的发票金额
+    // 从数据库中获取待支付的发票金额
     const numberOfInvoices = Number(data[0][0].count ?? '0');
     const numberOfCustomers = Number(data[1][0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
@@ -86,6 +99,7 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6;
+// 从数据库中获取过滤后的发票
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
@@ -104,6 +118,7 @@ export async function fetchFilteredInvoices(
         customers.image_url
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
+   
       WHERE
         customers.name ILIKE ${`%${query}%`} OR
         customers.email ILIKE ${`%${query}%`} OR
@@ -121,6 +136,7 @@ export async function fetchFilteredInvoices(
   }
 }
 
+// 从数据库中获取发票的总页数
 export async function fetchInvoicesPages(query: string) {
   try {
     const data = await sql`SELECT COUNT(*)
@@ -142,6 +158,7 @@ export async function fetchInvoicesPages(query: string) {
   }
 }
 
+// 
 export async function fetchInvoiceById(id: string) {
   try {
     const data = await sql<InvoiceForm[]>`

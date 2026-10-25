@@ -1,15 +1,24 @@
+// 分页组件
 'use client';
 
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
-
+import { usePathname, useSearchParams } from 'next/navigation';
+// 分页组件
 export default function Pagination({ totalPages }: { totalPages: number }) {
   // NOTE: Uncomment this code in Chapter 10
 
   // const allPages = generatePagination(currentPage, totalPages);
-
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
   return (
     <>
       {/*  NOTE: Uncomment this code in Chapter 10 */}
@@ -52,6 +61,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   );
 }
 
+// 分页数字组件
 function PaginationNumber({
   page,
   href,
@@ -83,6 +93,7 @@ function PaginationNumber({
   );
 }
 
+// 分页箭头组件
 function PaginationArrow({
   href,
   direction,

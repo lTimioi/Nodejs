@@ -52,6 +52,7 @@ export type LatestInvoice = {
 export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
   amount: number;
 };
+
 // 发票表格数据类型
 export type InvoicesTable = {
   id: string;

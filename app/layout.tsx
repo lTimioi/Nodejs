@@ -16,7 +16,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}> 
         {children}
         {/* 在Tailwind 中可以直接添加类名来进行样式设计*/}
-         <h1 className="text-blue-500">I'm blue!</h1>
+         {/* <h1 className="text-blue-500">I'm blue!</h1> */}
       </body>
     </html>
   );
